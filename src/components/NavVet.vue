@@ -25,6 +25,7 @@
           <a class="nav-link active" href="#">Acerca de</a>
         </li>
       </ul>
+      <router-link to="/Compra">carrito</router-link>
       <a class="nav-link ms-auto active" href="#">Iniciar sesión</a>
     </div>
   </div>
