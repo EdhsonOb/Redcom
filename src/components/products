@@ -1,0 +1,23 @@
+export const products = [
+          { id: 1,  name: 'Zanahoria de hule', price: 99, image: require('@/assets/imagen1.png'), description:'Zanahoria de hule para tu mascota, duradera y de alta calidad, te prometo que le encantara. ' },
+          { id: 2,  name: 'Pollo de hule', price: 99, image: require('@/assets/imagen2.png'), description:'Pollo de hule para tu mascota, duradera y de alta calidad, te prometo que le encantara.' },
+          { id: 3,  name: 'Pelota de tenis', price: 149, image: require('@/assets/imagen3.png'), description:'Pelota de tenis, un juguete que seguro tendra ocupado a tu mascota por un largo tiempo' },
+          { id: 4,  name: 'Pack 3 mancuerdas de hule', price: 249, image: require('@/assets/imagen4.png'), description:'Un pack de 3 mancuernas que son de hule, es un combo que no podras perderte y algo que tu perro no podrá soportar no tenerlo' },
+          { id: 5,  name: 'hola', price: 0, image: require('@/assets/imagen4.png'), description:'hola' },
+          { id: 6,  name: 'Hueso de hule', price: 99, image: require('@/assets/imagen6.png'), description:'Si a tu perro le encantas los huesos es el juguete perfecto para el, no evites comprarselo y mejor hazlo feliz' },
+          { id: 7,  name: 'Hot Dog de hule', price: 89, image: require('@/assets/imagen7.png'), description:'Y no hablo del perrito, si tu perro es fan de los hot dogs es el regalo ideal para él' },
+          { id: 8,  name: 'Combo de plato y de pelota', price: 199, image: require('@/assets/imagen8.png'), description:'GRan combo a gran precio, un plato que puede servir para el agua o la comida y una pelota para que sea feliz' },
+          { id: 9,  name: 'Diamon PREMIUM adulto', price: 799, image: require('@/assets/imagen9.png'), description:'Dale de las mejores croquetas a tu perro por un gran precio' },
+          { id: 10, name: 'Pack 2 Nupec Senior ', price: 1869, image: require('@/assets/imagen10.png'),description:'Dale de las mejores croquetas a tu perro con este gran combo' },
+          { id: 11, name: 'Pack 2 Nupec Senior', price: 1869, image: require('@/assets/imagen11.png'),description:'Dale de las mejores croquetas a tu perro con este gran combo' },
+          { id: 12, name: 'Top Choice cachorro & adulto', price: 999, image: require('@/assets/imagen12.png'),description:'Dale de las mejores croquetas a tu perro por un gran precio' },
+          { id: 13, name: 'Frisbee', price: 59, image: require('@/assets/imagen13.png'),description:'Si eres fan de pasear a tu perro no puede faltar este frisbee de tela para que dure mas' },
+          { id: 14, name: 'Nudo de goma', price: 79, image: require('@/assets/imagen14.png'),description:'Si tu perro es rapido para desenredar o destruir las cosas este es su juguete favorito' },
+          { id: 15, name: 'Caja de 10 galletas PREMIUM', price: 139, image: require('@/assets/imagen15.png'),description:'Si tu perro se porta bien, es mejor recompensarlo con estos premios' },
+          { id: 16, name: 'Hamburguesa de hule', price: 159, image: require('@/assets/imagen16.png'),description:'Si tu perro es fan de bob esponja no dudes en comprarle esta cangreburger' },
+          { id: 17, name: 'hola', price: 0, image: require('@/assets/imagen16.png'),description:'hola' },
+          { id: 18, name: 'hola', price: 0, image: require('@/assets/imagen16.png'),description:'hola' },
+          { id: 19, name: 'hola', price: 0, image: require('@/assets/imagen16.png'),description:'hola' },
+          { id: 20, name: 'hola', price: 0, image: require('@/assets/imagen16.png'),description:'hola' },
+  // Resto de los productos...
+];

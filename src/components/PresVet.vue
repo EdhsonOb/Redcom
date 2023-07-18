@@ -1,29 +1,30 @@
 <template>
   <div class="container inicio">
     <div class="image-container">
-    <img src="@/assets/fondoVet.jpg" alt="Fondo de imagen">
-    <div class="text-container">
+      <img src="@/assets/fondoVet.jpg" alt="Fondo de imagen">
+      <div class="text-container">
         <h1 class="title">Home Pets</h1>
-  <p class="description">¡Bienvenido a Home Pets! Somos un equipo apasionado por el cuidado y bienestar de tus mascotas. Ofrecemos servicios de calidad y atención personalizada para garantizar la felicidad y salud de tus peludos compañeros. ¡Confía en nosotros para cuidar a tus mascotas como si fueran parte de nuestra familia!</p>
+        <p class="description">¡Bienvenido a Home Pets! Somos un equipo apasionado por el cuidado y bienestar de tus mascotas. Ofrecemos servicios de calidad y atención personalizada para garantizar la felicidad y salud de tus peludos compañeros. ¡Confía en nosotros para cuidar a tus mascotas como si fueran parte de nuestra familia!</p>
+      </div>
     </div>
   </div>
-  </div>
   <div class="container text-center">
-  <h2>Productos más vendidos en juguetes</h2>
-  <div class="row justify-content-center">
-    <div class="col-sm-6 col-md-4 col-lg-3" v-for="(producto, index) in productos" :key="producto.id">
-      <div class="card mb-3" :class="index === 2 ? 'small-card' : ''">
-        <img class="card-img-top" :src="producto.imagen" alt="" style="object-fit: cover; height: 200px;">
-        <div class="card-body">
-          <h5 class="card-title">{{ producto.nombre }}</h5>
-          <p class="card-text">$ {{ producto.precio }} MXN</p>
-          <button class="btn btn-primary" @click="agregarAlCarrito(producto)">Ver información</button>
+    <h2>Productos más vendidos en juguetes</h2>
+    <div class="row justify-content-center">
+      <div class="col-sm-6 col-md-4 col-lg-3" v-for="(producto, index) in productos" :key="producto.id">
+        <div class="card mb-3" :class="index === 2 ? 'small-card' : ''">
+          <img class="card-img-top" :src="producto.imagen" alt="" style="object-fit: cover; height: 200px;">
+          <div class="card-body">
+            <h5 class="card-title">{{ producto.nombre }}</h5>
+            <p class="card-text">$ {{ producto.precio }} MXN</p>
+            <router-link :to="`/productos/${producto.id}`" class="btn btn-primary">Ver información</router-link>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 </template>
+
 
 <script>
 export default {
