@@ -38,35 +38,48 @@ export default createStore({
     vaciarCarrito({ commit }) {
       commit('vaciarCarrito');
     },
-    async procesarPago({ commit }) {
+    async procesarPago({ commit, getters, dispatch }) {
       const publicKey = 'pk_test_51NCc1hKUhoIrfZMvxnY5Q5rdn7RSQoGyZz1Us8tSGjRuKuLUJZb51LtHKk1hYwokozmphS083m2vREyLk2blPuYr00gOz4p8Yv';
       const stripe = await loadStripe(publicKey);
-
+    
       if (this.state.pagoConfirmado) {
         console.log('Pago ya confirmado, no se puede procesar nuevamente.');
         return;
       }
-
+    
       try {
+        // Crear el pago y obtener el client_secret desde la respuesta
         const response = await stripe.paymentIntents.create({
-          amount: Math.round(this.getters.calcularTotal() * 100),
+          amount: Math.round(getters.calcularTotal * 100),
           currency: 'MXN',
           payment_method_types: ['card'],
           description: 'Compra en tienda en línea',
         });
-
-        await this.dispatch('mostrarMensajeExito', response);
+    
+        const clientSecret = response.client_secret;
+    
+        // Confirmar el pago usando el client_secret correcto
+        const paymentResult = await stripe.confirmCardPayment(clientSecret, {
+          payment_method: {
+            card: {
+              number: this.cardNumber,
+              exp_month: this.expMonth,
+              exp_year: this.expYear,
+              cvc: this.cvc,
+            },
+          },
+        });
+    
+        await dispatch('mostrarMensajeExito', paymentResult);
         commit('confirmarPago');
       } catch (error) {
-        await this.dispatch('mostrarMensajeError', error);
+        await dispatch('mostrarMensajeError', error);
       }
     },
-    async mostrarMensajeExito(_, response) {
-      alert('Pago exitoso: ' + response.id);
-    },
     async mostrarMensajeError(_, error) {
-      alert('Error al procesar el pago: ' + error.message);
+      console.log('Error al procesar el pago:', error);
     },
+    
   },
   getters: {
     productosEnCarrito(state) {

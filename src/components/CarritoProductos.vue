@@ -28,7 +28,24 @@
       <p class="carrito-total">Total: {{ calcularTotal() }} MXN</p>
 
       <button class="carrito-vaciar" @click="vaciarCarrito">Vaciar carrito</button>
-      <button class="carrito-pagar" @click="procesarPago">Pagar</button>
+
+
+      <form @submit.prevent="procesarPago">
+        <label>
+          Número de tarjeta:
+          <input type="text" v-model="cardNumber" />
+        </label>
+        <label>
+          Fecha de vencimiento:
+          <input type="text" v-model="expMonth" placeholder="MM" style="width: 30px;" />
+          <input type="text" v-model="expYear" placeholder="YYYY" style="width: 50px;" />
+        </label>
+        <label>
+          Código CVC:
+          <input type="text" v-model="cvc" />
+        </label>
+        <button type="submit">Pagar</button>
+      </form>
     </div>
 
     <router-link to="/" class="carrito-volver">Volver</router-link>
@@ -40,19 +57,43 @@ import { mapGetters, mapActions } from 'vuex';
 import { loadStripe } from '@stripe/stripe-js';
 
 export default {
+  data() {
+    return {
+      cardNumber: '',
+      expMonth: '',
+      expYear: '',
+      cvc: '',
+      stripe: null,
+    };
+  },
   computed: {
     ...mapGetters(['productosEnCarrito', 'pagoConfirmado']),
     productos() {
-      return this.productosEnCarrito.map(item => ({
-        producto: item?.producto,
-        cantidad: item?.cantidad,
+      const productosUnicos = [];
+      this.productosEnCarrito.forEach(item => {
+        const productoExistente = productosUnicos.find(p => p.producto.id === item.producto.id);
+        if (!productoExistente) {
+          productosUnicos.push(item);
+        }
+      });
+      return productosUnicos.map(item => ({
+        producto: item.producto,
+        cantidad: item.cantidad,
       }));
     },
   },
   methods: {
     ...mapActions(['quitarDelCarrito', 'vaciarCarrito', 'confirmarPago']),
     calcularSubtotal() {
-      return this.productosEnCarrito.reduce((subtotal, item) => subtotal + (item?.producto?.price * item?.cantidad), 0);
+      const subtotal = this.productos.reduce((subtotal, item) => {
+        const precio = item?.producto?.price || 0;
+        const cantidad = item?.cantidad || 0;
+        return subtotal + (precio * cantidad);
+      }, 0);
+
+      console.log('Subtotal:', subtotal); // Agregar esta línea para imprimir el valor en la consola
+
+      return subtotal;
     },
     calcularIVA() {
       return this.calcularSubtotal() * 0.16; // 16% de IVA
@@ -60,25 +101,42 @@ export default {
     calcularTotal() {
       return this.calcularSubtotal() + this.calcularIVA();
     },
-    ...mapActions(['quitarDelCarrito', 'vaciarCarrito', 'confirmarPago']),
-    async procesarPago() {
+    async initializeStripe() {
       const publicKey = 'pk_test_51NCc1hKUhoIrfZMvxnY5Q5rdn7RSQoGyZz1Us8tSGjRuKuLUJZb51LtHKk1hYwokozmphS083m2vREyLk2blPuYr00gOz4p8Yv';
-      const stripe = await loadStripe(publicKey);
-
-      if (this.pagoConfirmado) {
-        console.log('Pago ya confirmado, no se puede procesar nuevamente.');
-        return;
-      }
-
+      this.stripe = await loadStripe(publicKey);
+    },
+    async procesarPago() {
       try {
-        const response = await stripe.paymentIntents.create({
-          amount: Math.round(this.calcularTotal * 100),
+        if (!this.stripe) {
+          await this.initializeStripe();
+        }
+
+        if (this.pagoConfirmado) {
+          console.log('Pago ya confirmado, no se puede procesar nuevamente.');
+          return;
+        }
+
+        const response = await this.stripe.paymentIntents.create({
+          amount: Math.round(this.calcularTotal() * 100),
           currency: 'MXN',
           payment_method_types: ['card'],
           description: 'Compra en tienda en línea',
         });
 
-        await this.mostrarMensajeExito(response);
+        const clientSecret = response.client_secret;
+
+        const paymentResult = await this.stripe.confirmCardPayment(clientSecret, {
+          payment_method: {
+            card: {
+              number: this.cardNumber,
+              exp_month: this.expMonth,
+              exp_year: this.expYear,
+              cvc: this.cvc,
+            },
+          },
+        });
+
+        await this.mostrarMensajeExito(paymentResult);
         this.confirmarPago();
       } catch (error) {
         await this.mostrarMensajeError(error);
@@ -91,9 +149,9 @@ export default {
       alert('Error al procesar el pago: ' + error.message);
     },
   },
-
 };
 </script>
+
 <style scoped>
 .carrito {
   margin-top: 40px;
